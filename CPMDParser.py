@@ -4,7 +4,7 @@ from pathlib import Path
 headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
             'authority': 'civitai.com'}
 
-def computeSha256(fName):
+def calcSha256(fName):
     hashSha256 = hashlib.sha256()
     with open(fName, 'rb') as f:
         for chunk in iter(lambda: f.read(4096), b""):
@@ -24,7 +24,7 @@ for checkpoint in checkpoints:
         print(f'[{i}/{len(checkpoints)}] Skipping "{chkptFname}" (metadata file already exists)')
     else:
         print(f'[{i}/{len(checkpoints)}] Fetching metadata for "{chkptFname}"..')# fName = Path(checkpoint).stem # no extension
-        sha256hash = computeSha256(Path(checkpoint))
+        sha256hash = calcSha256(Path(checkpoint))
 
         r = requests.get(f'https://civitai.com/api/v1/model-versions/by-hash/{str(sha256hash).upper()}', headers=headers).json()
         if len(r) > 1:
@@ -46,7 +46,7 @@ for checkpoint in checkpoints:
             modelTags = r['tags']
 
             with open(checkpoint.replace(chkptExt, '.md'), 'w') as f:
-                f.write(f'# **{modelName}** [{chkptName}]\n![cover]({modelCover})\n\nTags: {", ".join(modelTags)}\n\nTrigger words: {", ".join(triggerWords)}\n\n{modelDesc}\n-----\n{chkptDesc}\n\nUploaded by: {modelCreator}\nURL: https://civitai.com/models/{modelId}')
+                f.write(f'# **{modelName}** [{chkptName}]\n![cover]({modelCover})\n\nTags: {", ".join(modelTags)}\n\nTrigger words: {", ".join(triggerWords)}\n\n{modelDesc}\n-----\n{chkptDesc}\n\nUploaded by: {modelCreator}\n\nURL: https://civitai.com/models/{modelId}')
             
             with open(checkpoint.replace(chkptExt, '.png'), 'wb') as f:
                 f.write(requests.get(modelCover, headers=headers).content)
