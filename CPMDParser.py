@@ -47,7 +47,7 @@ for checkpoint in checkpoints:
                     f'# **{modelName}** [{chkptName}]\n![cover]({modelCover})\n\nTags: {", ".join(modelTags)}\n\nTrigger words: {", ".join(triggerWords)}\n\n{modelDesc}\n-----\n{chkptDesc}\n\nUploaded by: {modelCreator}\n\nURL: https://civitai.com/models/{modelId}'
                 )
 
-            with open(rootDir/chkptFname.replace(chkptExt, '.png'), 'wb', encoding='utf-8') as f:
+            with open(rootDir/chkptFname.replace(chkptExt, '.png'), 'wb') as f:
                 f.write(requests.get(modelCover).content)
 
             print(f'[{i}/{len(checkpoints)}] [+] Metadata for "{chkptFname}" was saved as "{chkptFname.replace(chkptExt, ".md")}"')
