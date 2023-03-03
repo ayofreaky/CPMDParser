@@ -8,7 +8,7 @@ def calcSha256(fPath):
             sha256.update(chunk)
     return sha256.hexdigest()
 
-rootDir = Path(input('Root path for LoRA checkpoints: '))
+rootDir = Path(input('Checkpoints directory: '))
 exts = ['*.pt', '*.safetensors', '*.ckpt']
 checkpoints = [f for ext in exts for f in glob.glob(str(rootDir/ext))]
 
@@ -17,8 +17,8 @@ for checkpoint in checkpoints:
     i += 1
     chkptExt = Path(checkpoint).suffix
     chkptFname = Path(checkpoint).name
-    if (rootDir/chkptFname.replace(chkptExt, '.txt')).exists() or (rootDir/chkptFname.replace(chkptExt, '.md')).exists():
-        print(f'[{i}/{len(checkpoints)}] [-] Skipping "{chkptFname}" (metadata file already exists)')
+    if (rootDir/chkptFname.replace(chkptExt, '.md')).exists():
+        print(f'[{i}/{len(checkpoints)}] [-] Skipping "{chkptFname}" (.md file already exists)')
     else:
         print(f'[{i}/{len(checkpoints)}] [~] Fetching metadata for "{chkptFname}"..')
         sha256 = calcSha256(checkpoint)
